@@ -3,7 +3,7 @@ import pathlib
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.RESIZABLE)
-screen_width, screen_height = pygame.display.get_window_size()
+virtual_screen = pygame.Surface((320, 180))
 clock = pygame.time.Clock()
 
 
@@ -30,9 +30,9 @@ class Hero(pygame.sprite.Sprite):
         self.animation_timer = 0
         self.current_frame = 0
         self.image = pygame.image.load(f"img/{self.person1}/{self.person2}/{self.animation_type}/{self.person2}_1.png")
-        self.image = pygame.transform.scale(self.image, (256, 256))
+        self.image = pygame.transform.scale(self.image, (64, 64))
         self.rect = self.image.get_rect(center=(x, y))
-        self.speed = 5
+        self.speed = 2
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)
@@ -60,7 +60,7 @@ class Hero(pygame.sprite.Sprite):
             self.image = pygame.image.load(
                 f"img/{self.person1}/{self.person2}/{self.animation_type}/{self.person2}_{self.current_frame}.png"
             )
-            self.image = pygame.transform.scale(self.image, (256, 256))
+            self.image = pygame.transform.scale(self.image, (64, 64))
 
 
 def start_game():
@@ -68,10 +68,13 @@ def start_game():
     while running:
         dt = clock.tick(60)
         keys = pygame.key.get_pressed()
-        screen.fill((0, 0, 0))
+        virtual_screen.fill((0, 0, 0))
         player.update(keys, dt)
-        player.draw(screen)
-        pygame.display.update()
+        player.draw(virtual_screen)
+        screen_width, screen_height = pygame.display.get_window_size()
+        scaled_screen = pygame.transform.scale(virtual_screen, (screen_width, screen_height))
+        screen.blit(scaled_screen, (0, 0))
+        pygame.display.flip()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -81,4 +84,4 @@ def start_game():
                     running = False
 
 
-player = Hero(screen_width//2, screen_height//2)
+player = Hero(160, 90)
