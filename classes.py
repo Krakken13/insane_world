@@ -2,6 +2,7 @@ import pygame
 import pathlib
 
 pygame.init()
+frames = 144
 screen = pygame.display.set_mode((0, 0), pygame.RESIZABLE)
 virtual_screen = pygame.Surface((320, 180))
 clock = pygame.time.Clock()
@@ -32,7 +33,9 @@ class Hero(pygame.sprite.Sprite):
         self.image = pygame.image.load(f"img/{self.person1}/{self.person2}/{self.animation_type}/1.png")
         self.image = pygame.transform.scale(self.image, (64, 64))
         self.rect = self.image.get_rect(center=(x, y))
-        self.speed = 1
+        self.speed = 1 * 60/frames
+        if self.speed <= 0.5:
+            self.speed = 0.51
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)
@@ -68,7 +71,7 @@ class Hero(pygame.sprite.Sprite):
 def start_game():
     running = True
     while running:
-        dt = clock.tick(144)
+        dt = clock.tick(frames)
         keys = pygame.key.get_pressed()
         virtual_screen.fill((0, 0, 0))
         player.update(keys, dt)
